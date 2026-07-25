@@ -1,0 +1,235 @@
+{
+  "items": [
+    {
+      "type": "project",
+      "title": "2D Pen Plotter Robot",
+      "description": "Custom hardware automated writing robot built from scratch using CNC techniques, stepper drivers, and G-code interpretation.",
+      "tags": ["C++", "Arduino", "Hardware Automation"],
+      "link": "https://github.com/arghyadebsikder",
+      "demo": "",
+      "docs": "",
+      "images": [],
+      "video": "",
+      "date": "2024",
+      "category": "Robotics",
+      "status": "Completed",
+      "timeline": "3 months",
+      "problem": "Writing repetitive documents by hand wastes hours and off-the-shelf plotters are expensive.",
+      "solution": "Designed a 2-axis CNC plotter driven by an Arduino: custom G-code parser, stepper control with A4988 drivers, and a pen lift servo.",
+      "challenges": "Backlash in the belt drive and timing jitter in step pulses; solved with acceleration profiles and interrupt-driven stepping.",
+      "results": "Repeatable sub-millimetre accuracy on A4 paper at a fraction of commercial cost.",
+      "impact": "Became my gateway into embedded control loops and motion systems."
+    },
+    {
+      "type": "project",
+      "title": "Line Follower Robot",
+      "description": "Autonomous PID-controlled robot navigating complex tracks using IR sensor arrays and real-time motor tuning.",
+      "tags": ["Arduino", "C++", "Robotics", "PID Control"],
+      "link": "https://github.com/arghyadebsikder",
+      "demo": "",
+      "docs": "",
+      "images": [],
+      "video": "",
+      "date": "2024",
+      "category": "Robotics",
+      "status": "Completed",
+      "timeline": "6 weeks",
+      "problem": "Naive on/off steering makes line followers oscillate and lose the track on sharp curves.",
+      "solution": "Implemented a tuned PID loop over an 8-sensor IR array with weighted position estimation and dynamic speed scaling.",
+      "challenges": "Sensor calibration under changing ambient light; added auto-calibration sweep at startup.",
+      "results": "Stable high-speed runs through intersections, gaps, and hairpin turns.",
+      "impact": "Competition-ready platform reused by juniors as a learning base."
+    },
+    {
+      "type": "project",
+      "title": "Competitive Programming Library",
+      "description": "Battle-tested C++ templates for graphs, number theory, DP optimizations, and data structures used in live contests.",
+      "tags": ["C++", "Algorithms", "Data Structures"],
+      "link": "https://github.com/arghyadebsikder",
+      "demo": "",
+      "docs": "",
+      "images": [],
+      "video": "",
+      "date": "2025",
+      "category": "Competitive Programming",
+      "status": "Active",
+      "timeline": "Ongoing",
+      "problem": "Re-deriving standard algorithms under contest pressure costs precious minutes.",
+      "solution": "Curated a personal library of tested, benchmarked snippets: segment trees, LIS, Dijkstra, modular arithmetic, and more.",
+      "challenges": "Balancing genericity with contest-speed typing; settled on short, memorizable implementations.",
+      "results": "Consistently faster problem-to-AC time in rated contests.",
+      "impact": "Shared with my university's CP community."
+    },
+    {
+      "type": "project",
+      "title": "Cinematic Campus Aftermovie",
+      "description": "Shot and edited a high-energy event aftermovie with color grading, sound design, and motion graphics.",
+      "tags": ["Premiere Pro", "Video Editing"],
+      "link": "https://github.com/arghyadebsikder",
+      "demo": "",
+      "docs": "",
+      "images": [],
+      "video": "",
+      "date": "2025",
+      "category": "Video Editing",
+      "status": "Completed",
+      "timeline": "2 weeks",
+      "problem": "Event recaps are usually long, flat, and unwatched.",
+      "solution": "A tight edit: beat-matched cuts, speed ramps, clean sound design, and a consistent color grade.",
+      "challenges": "Mixed footage sources with different color profiles; normalized via LUT pipeline.",
+      "results": "A tight aftermovie that the audience actually rewatched and shared.",
+      "impact": "Set the visual standard for subsequent campus events."
+    },
+    {
+      "type": "presentation",
+      "title": "Algorithms in Competitive Programming",
+      "description": "Campus presentation on optimization techniques and dynamic programming — from brute force to O(n log n) elegance.",
+      "tags": ["Algorithms", "Slide Deck"],
+      "link": "#",
+      "images": [],
+      "video": "",
+      "date": "2025"
+    },
+    {
+      "type": "presentation",
+      "title": "Intro to Embedded Systems",
+      "description": "Hands-on workshop walking beginners through microcontrollers, sensors, and their first blinking LED to full automation.",
+      "tags": ["Arduino", "Workshop", "Slide Deck"],
+      "link": "#",
+      "images": [],
+      "video": "",
+      "date": "2024"
+    }
+  ],
+  "achievements": [
+    {
+      "icon": "trophy",
+      "metric": "Top 10",
+      "title": "Divisional Programming Contest",
+      "description": "[Placeholder] Replace with your real contest result — rank, contest name, and year.",
+      "tag": "Contest",
+      "certificate": "",
+      "prize": ""
+    },
+    {
+      "icon": "medal",
+      "metric": "Olympiad",
+      "title": "National Olympiad Participant",
+      "description": "[Placeholder] Add your olympiad achievements — math, informatics, or physics.",
+      "tag": "Olympiad",
+      "certificate": "",
+      "prize": ""
+    },
+    {
+      "icon": "star",
+      "metric": "1000+",
+      "title": "Problems Solved Globally",
+      "description": "Cumulative solved count across Codeforces, VJudge, and Beecrowd.",
+      "tag": "Ranking",
+      "certificate": "",
+      "prize": ""
+    },
+    {
+      "icon": "youtube",
+      "metric": "10K+",
+      "title": "YouTube Milestone",
+      "description": "[Placeholder] Add your channel milestone — views, subscribers, or a viral edit.",
+      "tag": "Creator",
+      "certificate": "",
+      "prize": ""
+    },
+    {
+      "icon": "scroll",
+      "metric": "Scholar",
+      "title": "Merit Scholarship",
+      "description": "[Placeholder] Add scholarships or academic honors you have received.",
+      "tag": "Academic",
+      "certificate": "",
+      "prize": ""
+    },
+    {
+      "icon": "flask",
+      "metric": "Research",
+      "title": "Undergraduate Research",
+      "description": "[Placeholder] Add your research work, poster sessions, or publications.",
+      "tag": "Research",
+      "certificate": "",
+      "prize": ""
+    }
+  ],
+  "skills": [
+    {
+      "icon": "code",
+      "title": "Languages & Problem Solving",
+      "tags": ["C / C++", "Python", "Data Structures & Algorithms", "Mathematics", "Contest Strategy"]
+    },
+    {
+      "icon": "cpu",
+      "title": "Embedded & Robotics",
+      "tags": ["Arduino", "ESP32", "Raspberry Pi", "STM32", "PID Control", "Circuit Design", "Sensor Integration"]
+    },
+    {
+      "icon": "film",
+      "title": "Media & Tools",
+      "tags": ["Video Editing (Premiere Pro)", "Color Grading", "Sound Design", "Git & GitHub", "Linux"]
+    }
+  ],
+  "profiles": {
+    "codeforces": {
+      "handle": "arghyadebsikder",
+      "url": "https://codeforces.com/profile/arghyadebsikder",
+      "solved": 500,
+      "badge": "Rated"
+    },
+    "vjudge": {
+      "handle": "arghyadeb",
+      "url": "https://vjudge.net/user/arghyadeb",
+      "solved": 350,
+      "badge": "Contests"
+    },
+    "beecrowd": {
+      "handle": "1141274",
+      "url": "https://judge.beecrowd.com/en/profile/1141274",
+      "solved": 200,
+      "badge": "Top Solver"
+    },
+    "github": {
+      "handle": "arghyadebsikder",
+      "url": "https://github.com/arghyadebsikder",
+      "repos": 25,
+      "badge": "Open Source"
+    }
+  },
+  "resume": {
+    "education": [
+      {
+        "title": "B.Sc. in Computer Science & Engineering",
+        "subtitle": "[University name — update me]",
+        "date": "20XX — present"
+      },
+      {
+        "title": "Higher Secondary Certificate (Science)",
+        "subtitle": "[College name — update me]",
+        "date": "20XX"
+      }
+    ],
+    "experience": [
+      {
+        "title": "Freelance Video Editor",
+        "subtitle": "Event aftermovies, campus films, and creator content.",
+        "date": "20XX — present"
+      },
+      {
+        "title": "Robotics Team Member",
+        "subtitle": "[Club/team name] — line follower & automation builds.",
+        "date": "20XX — present"
+      }
+    ],
+    "skillsSummary": ["C / C++", "Python", "DSA", "Mathematics", "Arduino", "ESP32", "Raspberry Pi", "Premiere Pro", "Git"],
+    "languages": [
+      { "name": "Bangla", "level": "native" },
+      { "name": "English", "level": "professional" },
+      { "name": "Hindi", "level": "conversational" }
+    ]
+  }
+}

@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arghya Deb Sikder</title>
+  <meta name="description"
+    content="Portfolio of Arghya Deb Sikder — CSE undergraduate specializing in competitive programming, mathematics, embedded systems & robotics, and video editing.">
+  <link rel="canonical" href="https://arghya.online/">
+
+  <!-- Favicon: inline SVG works out of the box. Drop favicon.png next to index.html (or edit the path below) to use your own icon. -->
+  <link rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2322d3ee'/%3E%3Cstop offset='1' stop-color='%23818cf8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%23060a13'/%3E%3Ctext x='32' y='42' font-family='monospace' font-size='30' font-weight='700' fill='url(%23g)' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E">
+  <link rel="icon" type="image/png" href="./favicon.png">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://arghya.online/">
+  <meta property="og:title" content="Arghya Deb Sikder — CSE Undergraduate & Tech Enthusiast">
+  <meta property="og:description"
+    content="Competitive programming, mathematics, embedded systems & robotics, and video editing — one portfolio.">
+  <meta property="og:image" content="https://arghya.online/assets/img/og-cover.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Arghya Deb Sikder — CSE Undergraduate & Tech Enthusiast">
+  <meta name="twitter:description"
+    content="Competitive programming, mathematics, embedded systems & robotics, and video editing — one portfolio.">
+  <meta name="twitter:image" content="https://arghya.online/assets/img/og-cover.png">
+
+  <meta name="theme-color" content="#060a13">
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Arghya Deb Sikder",
+    "url": "https://arghya.online/",
+    "email": "mailto:arghyadebsikder@gmail.com",
+    "jobTitle": "CSE Undergraduate",
+    "knowsAbout": ["Competitive Programming", "Mathematics", "Embedded Systems", "Robotics", "Video Editing", "C++", "Arduino"],
+    "sameAs": [
+      "https://github.com/arghyadebsikder",
+      "https://codeforces.com/profile/arghyadebsikder",
+      "https://vjudge.net/user/arghyadeb",
+      "https://judge.beecrowd.com/en/profile/1141274",
+      "https://www.facebook.com/arghyadebsikder/",
+      "https://t.me/arghyadebsikder/",
+      "https://www.linkedin.com/in/arghyadebsikder/",
+      "https://www.youtube.com/@arghyadebsikder/"
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="./assets/css/styles.css">
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="bg-layer" aria-hidden="true"></div>
+  <div class="grid-layer" aria-hidden="true"></div>
+  <div class="code-bg" aria-hidden="true">
+    <pre style="top:9%; left:2.5%">#include &lt;bits/stdc++.h&gt;
+while (t--) solve();
+sort(a.begin(), a.end());
+dp[i] = max(dp[i], dp[j] + w);</pre>
+    <pre style="top:14%; right:3%">e^(i&#960;) + 1 = 0
+&#8721; 1/n&#178; = &#960;&#178;/6
+&#8747;&#8320;^&#8734; e^(&#8722;x&#178;) dx = &#8730;&#960;/2
+f'(x) = lim&#8202;(f(x+h) &#8722; f(x))/h</pre>
+    <pre style="bottom:22%; left:3%">pinMode(13, OUTPUT);      // Arduino
+digitalWrite(LED, HIGH);
+Serial.begin(115200);
+servo.write(angle);</pre>
+    <pre style="bottom:9%; right:4%">WiFi.begin(ssid, pass);   // ESP32
+xTaskCreate(loopTask, "loop", 4096, NULL, 1, NULL);
+import RPi.GPIO as GPIO   # Raspberry Pi
+GPIO.setup(18, GPIO.OUT)</pre>
+  </div>
+  <div class="progress-bar" id="progressBar" aria-hidden="true"></div>
+
+  <!-- ================= Nav (ordered by page serial) ================= -->
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="logo" href="#home" aria-label="Arghya.online — home">Arghya<span>.online</span></a>
+      <nav aria-label="Primary">
+        <ul class="nav-links">
+          <li><a href="#about">About</a></li>
+          <li><a href="#journey">Journey</a></li>
+          <li><a href="#achievements">Achievements</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#presentations">Talks</a></li>
+          <li><a href="#research">Research</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#profiles">Profiles</a></li>
+          <li><a href="#resume">Resume</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="nav-actions">
+        <button class="kbd-hint" id="paletteBtn" aria-label="Open command palette"><span>Search</span><kbd>Ctrl
+            K</kbd></button>
+        <button class="icon-btn" id="themeToggle" aria-label="Toggle theme"></button>
+        <button class="icon-btn burger" id="burger" aria-label="Open menu" aria-expanded="false"
+          data-icon="menu"></button>
+      </div>
+    </div>
+  </header>
+  <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile">
+    <a href="#about">About</a><a href="#journey">Journey</a><a href="#achievements">Achievements</a>
+    <a href="#projects">Projects</a><a href="#presentations">Presentations &amp; Talks</a><a
+      href="#research">Research</a>
+    <a href="#skills">Skills</a><a href="#profiles">Coding Profiles</a><a href="#resume">Resume</a><a
+      href="#contact">Contact</a>
+  </nav>
+
+  <main id="main">
+
+    <!-- ================= Hero (centered) ================= -->
+    <section class="hero" id="home">
+      <div class="wrap hero-inner">
+        <span class="hero-badge reveal in"><span class="dot"></span>OPEN TO OPPORTUNITIES &amp; COLLABORATIONS</span>
+        <div class="hero-id">
+          <div class="avatar">
+            <!-- Drop your photo at ./assets/img/profile.jpg — the monogram shows until then -->
+            <img src="./assets/img/profile.jpg" alt="Portrait of Arghya Deb Sikder"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+            <div class="monogram" style="display:none">ADS</div>
+          </div>
+          <div>
+            <h1>Arghya <em>Deb Sikder</em></h1>
+            <p class="hero-role">Competitive Programmer · Math Lover · Video Editor</p>
+          </div>
+        </div>
+        <p class="type-line" aria-live="polite"><span id="typeTarget"></span><span class="caret"
+            aria-hidden="true"></span></p>
+        <p class="hero-tagline">Solving Problems with Mathematics, Code, Intelligent Engineering and AI.</p>
+        <p class="hero-copy">I bridge the gap between abstract theory and physical tech. I started out pushing my
+          limits in competitive programming and mathematics, and my passion really clicked when I brought that logic
+          into embedded systems and robotics. I love building high-performance software that directly interacts with
+          the real world.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-primary" href="#projects">View Projects <span data-icon="arrowUpRight"></span></a>
+          <a class="btn btn-ghost" href="./assets/resume.pdf" download>Download Resume <span
+              data-icon="download"></span></a>
+          <a class="btn btn-ghost" href="#contact">Contact Me <span data-icon="send"></span></a>
+        </div>
+        <div class="hero-social">
+          <a class="social-btn" href="https://github.com/arghyadebsikder" target="_blank" rel="noopener"
+            aria-label="GitHub" data-icon="github"></a>
+          <a class="social-btn" href="https://codeforces.com/profile/arghyadebsikder" target="_blank" rel="noopener"
+            aria-label="Codeforces" data-icon="codeforces"></a>
+          <a class="social-btn" href="https://vjudge.net/user/arghyadeb" target="_blank" rel="noopener"
+            aria-label="VJudge" data-icon="vjudge"></a>
+          <a class="social-btn" href="https://judge.beecrowd.com/en/profile/1141274" target="_blank" rel="noopener"
+            aria-label="Beecrowd" data-icon="beecrowd"></a>
+          <a class="social-btn" href="mailto:arghyadebsikder@gmail.com" aria-label="Email" data-icon="mail"></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= About ================= -->
+    <section class="section" id="about">
+      <div class="wrap">
+        <p class="sec-kicker reveal">// About Me</p>
+        <h2 class="sec-title reveal">Powered by <em>Logic,</em> Driven by <em>Curiosity</em></h2>
+        <div class="about-grid">
+          <div class="glass about-story reveal">
+            <p>I'm <strong>Arghya Deb Sikder</strong>, a Computer Science &amp; Engineering undergraduate who fell in
+              love with problem solving the day a for-loop first obeyed me. Since then, that same curiosity has pulled
+              me across three worlds that rarely meet: <strong>competitive programming &amp; mathematics</strong>,
+              <strong>embedded systems &amp; robotics</strong>, and <strong>video editing</strong>.</p>
+            <p>In contests, I chase the feeling of an <strong>Accepted</strong> verdict earned by the right insight,
+              not brute force. As a math lover, I enjoy the elegance behind every algorithm. That discipline of
+              thinking in complexity budgets and edge cases carries directly into my hardware work, where a robot
+              doesn't forgive sloppy logic: PID loops, interrupt timing, and sensor noise all demand the same rigor as
+              a rated round.</p>
+            <p>Video editing is where the engineering brain meets the creative one. Editing videos taught me pacing
+              and how to communicate ideas clearly — skills that make my technical work clearer too.</p>
+            <p><strong>What makes me different</strong> is the loop between these worlds: mathematics sharpens my
+              algorithms, algorithms make my robots smarter, and video editing makes my engineering understandable. My
+              goal is to grow into a research-minded engineer building intelligent physical systems.</p>
+          </div>
+          <div class="about-aside">
+            <div class="glass glass-hover about-card reveal reveal-d1">
+              <div class="well" data-icon="code"></div>
+              <div>
+                <h3>Competitive Programming &amp; Math</h3>
+                <p>Aiming for rank #1: relentless solving, a deep love for mathematics, and a battle-tested C++
+                  template library.</p>
+              </div>
+            </div>
+            <div class="glass glass-hover about-card reveal reveal-d2">
+              <div class="well" data-icon="cpu"></div>
+              <div>
+                <h3>Embedded &amp; Robotics</h3>
+                <p>Worked with Arduino, ESP32, Raspberry Pi, STM32, and various sensors and actuators to build
+                  autonomous systems</p>
+              </div>
+            </div>
+            <div class="glass glass-hover about-card reveal reveal-d3">
+              <div class="well" data-icon="film"></div>
+              <div>
+                <h3>Video Editing</h3>
+                <p>Editing clean, high-energy videos with beat-matched cuts, color grading, and sound design.</p>
+              </div>
+            </div>
+            <div class="glass glass-hover about-card reveal reveal-d3">
+              <div class="well" data-icon="flask"></div>
+              <div>
+                <h3>Future Goals</h3>
+                <p>Research in intelligent robotics and sharing what I learn along the way.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= Journey ================= -->
+    <section class="section" id="journey">
+      <div class="wrap">
+        <p class="sec-kicker reveal">// The Journey</p>
+        <h2 class="sec-title reveal">From first loop to <em>autonomous robots</em></h2>
+        <div class="timeline" id="timeline">
+          <div class="timeline-rail">
+            <div class="timeline-fill" id="timelineFill"></div>
+          </div>
+          <div class="tl-item reveal">
+            <div class="tl-node"></div>
+            <div class="glass glass-hover tl-card"><span class="tl-year">The beginning</span>
+              <h3>Learning Programming</h3>
+              <p>First lines of C, discovering that logic, patiently arranged, becomes the power.</p>
+            </div>
+          </div>
+          <div class="tl-item reveal">
+            <div class="tl-node"></div>
+            <div class="glass glass-hover tl-card"><span class="tl-year">Hardware era</span>
+              <h3>Arduino Projects</h3>
+              <p>Blinking LEDs became sensors, servos, and eventually a 2D pen plotter that can do my assignments for
+                me.</p>
+            </div>
+          </div>
+          <div class="tl-item reveal">
+            <div class="tl-node"></div>
+            <div class="glass glass-hover tl-card"><span class="tl-year">Contest era</span>
+              <h3>Competitive Programming</h3>
+              <p>From Beecrowd to Vjudge and Codeforces 500+ problem solved!</p>
+            </div>
+          </div>
+          <div class="tl-item reveal">
+            <div class="tl-node"></div>
+            <div class="glass glass-hover tl-card"><span class="tl-year">Now</span>
+              <h3>Research &amp; Talks</h3>
+              <p>Sharing knowledge through campus presentations and exploring undergraduate research directions.</p>
+            </div>
+          </div>
+          <div class="tl-item reveal">
+            <div class="tl-node"></div>
+            <div class="glass glass-hover tl-card"><span class="tl-year">Next</span>
+              <h3>Future Goals</h3>
+              <p>Intelligent physical systems, published research, and clean engineering videos.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= Achievements ================= -->
+    <section class="section" id="achievements">
+      <div class="wrap">
+        <p class="sec-kicker reveal">// Milestones</p>
+        <h2 class="sec-title reveal">Achievements &amp; <em>Recognition</em></h2>
+        <p class="sec-lede reveal">Contests, olympiads, creator milestones, and academic honors — click a card to view
+          the certificate and prize photos.</p>
+        <div class="ach-grid" id="achGrid"></div>
+      </div>
+    </section>
+
+    <!-- ================= Projects ================= -->
+    <section class="section" id="projects">
+      <div class="wrap">
+        <div class="sec-head-row">
+          <div>
+            <p class="sec-kicker reveal">// Featured Work</p>
+            <h2 class="sec-title reveal">Projects as <em>case studies</em></h2>
+            <p class="sec-lede reveal">Problem → solution → results. Click a project to read the full case study with
+              photos &amp; video. Everything is editable in <code>data.json</code>.</p>
+          </div>
+          <span class="chip reveal" id="projectCount">…</span>
+        </div>
+        <div class="filter-bar reveal">
+          <div id="filterChips" style="display:flex;flex-wrap:wrap;gap:12px"></div>
+          <div class="search-box" style="margin-left:auto">
+            <span data-icon="search"></span>
+            <input type="search" id="projectSearch" placeholder="Search projects…" aria-label="Search projects">
+          </div>
+        </div>
+        <div class="projects-grid" id="projectsGrid"></div>
+        <div class="glass no-results" id="noResults">No projects match that filter — try another category or search
+          term.</div>
+      </div>
+    </section>
+
+    <!-- ================= Presentations ================= -->
+    <section class="section" id="presentations">
+      <div class="wrap">
+        <div class="sec-head-row">
+          <div>
+            <p class="sec-kicker reveal">// Talks &amp; Decks</p>
+            <h2 class="sec-title reveal">Presentations &amp; <em>Talks</em></h2>
+            <p class="sec-lede reveal">Sharing knowledge on stage — algorithms, embedded systems, and creative
+              workflows.</p>
+          </div>
+          <span class="chip reveal" id="talkCount">…</span>
+        </div>
+        <div class="talks-list" id="talksList"></div>
+      </div>
+    </section>
+
+    <!-- ================= Research ================= -->
+    <section class="section" id="research">
+      <div class="wrap">
+        <p class="sec-kicker reveal">// Research</p>
+        <h2 class="sec-title reveal">Research &amp; <em>exploration</em></h2>
+        <p class="sec-lede reveal">Early-stage undergraduate research.</p>
+        <div class="research-grid">
+          <article class="glass glass-hover research-card reveal">
+            <span class="chip">In progress</span>
+            <h3 style="margin-top:14px">Adaptive Line-Following via Self-Tuning PID Control</h3>
+            <div class="research-rows">
+              <div class="research-row">
+                <h4>Problem</h4>
+                <p>Fixed PID gains fail when track curvature, surface friction, or lighting changes — robots need
+                  re-tuning by hand.</p>
+              </div>
+              <div class="research-row">
+                <h4>Methodology</h4>
+                <p>Empirical gain-scheduling: profile the error signal in real time and switch between tuned parameter
+                  sets.</p>
+              </div>
+              <div class="research-row">
+                <h4>Hardware</h4>
+                <p>Arduino-class MCU, 8-sensor IR array, N20 gear motors, custom driver board.</p>
+              </div>
+              <div class="research-row">
+                <h4>Software</h4>
+                <p>C++ firmware, interrupt-driven control loop, serial telemetry logger.</p>
+              </div>
+              <div class="research-row">
+                <h4>Future work</h4>
+                <p>Port the controller to a learned policy and compare against classical tuning on benchmark tracks.</p>
+              </div>
+            </div>
+          </article>
+          <div class="research-side">
+            <div class="glass glass-hover research-interests reveal reveal-d1">
+              <h3>Research interests</h3>
+              <div class="interest-chips">
+                <span class="chip">Robotics &amp; Control</span><span class="chip">Embedded AI</span><span
+                  class="chip">Algorithm Engineering</span>
+                <span class="chip">Autonomous Systems</span><span class="chip">Edge Computing</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= Skills ================= -->
+    <section class="section" id="skills">
+      <div class="wrap">
+        <p class="sec-kicker reveal">// Capabilities</p>
+        <h2 class="sec-title reveal">Tech <em>stack</em></h2>
+        <p class="sec-lede reveal">Grouped by discipline.</p>
+        <div class="skills-grid" id="skillsGrid"></div>
+      </div>
+    </section>
+
+    <!-- ================= Coding Profiles ================= -->
+    <section class="section" id="profiles">
+      <div class="wrap">
+        <p class="sec-kicker reveal">// Coding Profiles</p>
+        <h2 class="sec-title reveal">Competitive Programming &amp; <em>Metrics</em></h2>
+        <p class="sec-lede reveal">Codeforces and GitHub numbers load automatically from my profiles when online; the
+          rest are editable in <code>data.json</code>.</p>
+        <div class="profiles-grid counter-scope" id="profilesGrid"></div>
+        <div id="combinedPanel"></div>
+      </div>
+    </section>
+
+    <!-- ================= Resume ================= -->
+    <section class="section" id="resume">
+      <div class="wrap">
+        <p class="sec-kicker reveal">// Resume</p>
+        <h2 class="sec-title reveal">Quick <em>overview</em></h2>
+        <div class="resume-grid">
+          <div class="resume-col">
+            <div class="glass resume-block reveal">
+              <h3><span data-icon="edu"></span> Education</h3>
+              <div id="eduList"></div>
+            </div>
+            <div class="glass resume-block reveal reveal-d1">
+              <h3><span data-icon="briefcase"></span> Experience</h3>
+              <div id="expList"></div>
+            </div>
+          </div>
+          <div class="resume-col">
+            <div class="glass resume-cta reveal">
+              <p>Prefer a one-page summary? View it in the browser or take a copy with you.</p>
+              <div class="btns">
+                <a class="btn btn-primary btn-sm" href="./assets/resume.pdf" target="_blank" rel="noopener"><span
+                    data-icon="eye"></span> View Resume</a>
+                <a class="btn btn-ghost btn-sm" href="./assets/resume.pdf" download><span data-icon="download"></span>
+                  Download</a>
+              </div>
+            </div>
+            <div class="glass resume-block reveal reveal-d1">
+              <h3><span data-icon="star"></span> Skills summary</h3>
+              <div class="interest-chips" id="skillChips"></div>
+            </div>
+            <div class="glass resume-block reveal reveal-d2">
+              <h3><span data-icon="globe"></span> Languages</h3>
+              <div class="lang-rows" id="langRows"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= Contact ================= -->
+    <section class="section" id="contact">
+      <div class="wrap">
+        <p class="sec-kicker reveal">// Contact</p>
+        <h2 class="sec-title reveal">Let's build <em>something great</em></h2>
+        <p class="sec-lede reveal">Whether it's an algorithm challenge, a hardware prototype, or a video that needs
+          editing — my inbox is open.</p>
+        <div class="contact-grid">
+          <form class="glass contact-form reveal" id="contactForm">
+            <h3>Send a message</h3>
+            <div class="form-row"><label for="cfName">Your name</label><input class="form-input" id="cfName" type="text"
+                required autocomplete="name"></div>
+            <div class="form-row"><label for="cfEmail">Your email</label><input class="form-input" id="cfEmail"
+                type="email" required autocomplete="email"></div>
+            <div class="form-row"><label for="cfMsg">Message</label><textarea class="form-input" id="cfMsg"
+                required></textarea></div>
+            <button class="btn btn-primary" type="submit">Send Message <span data-icon="send"></span></button>
+            <p class="form-note">Submitting opens your email app with the message pre-filled — no data is sent anywhere
+              else.</p>
+          </form>
+          <div class="contact-side">
+            <div class="glass contact-info reveal reveal-d1">
+              <h3>Direct</h3>
+              <div class="ci-row">
+                <div class="well" data-icon="mail"></div>
+                <div><b>Email</b><a href="mailto:arghyadebsikder@gmail.com">arghyadebsikder@gmail.com</a></div>
+              </div>
+              <div class="ci-row">
+                <div class="well" data-icon="pin"></div>
+                <div><b>Location</b><span>Bangladesh · open to remote</span></div>
+              </div>
+              <div class="ci-row">
+                <div class="well" data-icon="clock"></div>
+                <div><b>Response time</b><span>usually within 24 hours</span></div>
+              </div>
+            </div>
+            <div class="glass contact-info reveal reveal-d2">
+              <h3>Elsewhere</h3>
+              <div class="avail-chips">
+                <a class="social-btn" href="https://github.com/arghyadebsikder" target="_blank" rel="noopener"
+                  aria-label="GitHub" data-icon="github"></a>
+                <a class="social-btn" href="https://www.facebook.com/arghyadebsikder/" target="_blank" rel="noopener"
+                  aria-label="Facebook" data-icon="facebook"></a>
+                <a class="social-btn" href="https://t.me/arghyadebsikder/" target="_blank" rel="noopener"
+                  aria-label="Telegram" data-icon="telegram"></a>
+                <a class="social-btn" href="https://www.linkedin.com/in/arghyadebsikder/" target="_blank"
+                  rel="noopener" aria-label="LinkedIn" data-icon="linkedin"></a>
+                <a class="social-btn" href="https://www.youtube.com/@arghyadebsikder/" target="_blank" rel="noopener"
+                  aria-label="YouTube" data-icon="youtube"></a>
+              </div>
+              <div class="avail-chips" style="margin-top:16px">
+                <span class="chip">Open to internships</span><span class="chip">Freelance edits</span><span
+                  class="chip">CP teams</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= Footer ================= -->
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="logo" href="#home">Arghya<span>.online</span></a>
+          <p>Bridging high-performance algorithms, mathematics, hardware automation, and clean video editing.</p>
+        </div>
+        <div>
+          <h4>Explore</h4>
+          <ul class="footer-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#journey">Journey</a></li>
+            <li><a href="#achievements">Achievements</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#presentations">Presentations</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>More</h4>
+          <ul class="footer-links">
+            <li><a href="#research">Research</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#profiles">Coding Profiles</a></li>
+            <li><a href="#resume">Resume</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Connect</h4>
+          <div class="footer-social">
+            <a class="social-btn" href="https://www.facebook.com/arghyadebsikder/" target="_blank" rel="noopener"
+              aria-label="Facebook" data-icon="facebook"></a>
+            <a class="social-btn" href="https://t.me/arghyadebsikder/" target="_blank" rel="noopener"
+              aria-label="Telegram" data-icon="telegram"></a>
+            <a class="social-btn" href="https://www.linkedin.com/in/arghyadebsikder/" target="_blank" rel="noopener"
+              aria-label="LinkedIn" data-icon="linkedin"></a>
+            <a class="social-btn" href="https://www.youtube.com/@arghyadebsikder/" target="_blank" rel="noopener"
+              aria-label="YouTube" data-icon="youtube"></a>
+            <a class="social-btn" href="https://github.com/arghyadebsikder" target="_blank" rel="noopener"
+              aria-label="GitHub" data-icon="github"></a>
+            <a class="social-btn" href="mailto:arghyadebsikder@gmail.com" aria-label="Email" data-icon="mail"></a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span id="year">2026</span> Arghya Deb Sikder — crafted with algorithms &amp; caffeine.</span>
+        <span>built with vanilla HTML · CSS · JS — v3.0</span>
+      </div>
+    </div>
+  </footer>
+
+  <button class="icon-btn back-top" id="backTop" aria-label="Back to top" data-icon="arrowUp"></button>
+
+  <!-- ================= Command palette ================= -->
+  <div class="palette-overlay" id="paletteOverlay" role="dialog" aria-modal="true" aria-label="Command palette">
+    <div class="glass palette">
+      <div class="palette-input-row">
+        <span data-icon="search"></span>
+        <input class="palette-input" id="paletteInput" type="text" placeholder="Jump to a section, project, or action…"
+          aria-label="Command palette search">
+        <kbd style="font-family:var(--font-mono);font-size:0.7rem;color:var(--text-3)">esc</kbd>
+      </div>
+      <div class="palette-list" id="paletteList"></div>
+    </div>
+  </div>
+
+  <!-- ================= Detail popup ================= -->
+  <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-label="Details">
+    <div class="glass modal">
+      <button class="icon-btn modal-close" id="modalClose" aria-label="Close details" data-icon="x"></button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <script src="./assets/js/app.js"></script>
+</body>
+
+</html>
