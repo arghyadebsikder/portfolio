@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DM Presentation Topic Assigner</title>
+    <style>
+        :root {
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --accent: #3b82f6;
+            --accent-light: #eff6ff;
+            --border-color: #d1d5db;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 
+                        0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        p.subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.95em;
+            margin-bottom: 30px;
+        }
+
+        .otp-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .otp-input {
+            width: 60px;
+            height: 70px;
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-main);
+            background-color: #f9fafb;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .otp-input:focus {
+            border-color: var(--accent);
+            background-color: var(--card-bg);
+            box-shadow: 0 0 0 4px var(--accent-light);
+        }
+
+        .result-container {
+            margin-top: 20px;
+            padding: 25px;
+            border-radius: 12px;
+            background-color: var(--accent-light);
+            border: 1px solid #bfdbfe;
+            display: none;
+            text-align: center;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        .result-container h3 {
+            color: var(--accent);
+            font-size: 0.85em;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+        }
+
+        .topic-number {
+            font-size: 1.1em;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .topic-name {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.3;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2>DM Presentation Topic Finder</h2>
+        <p class="subtitle">Enter the last 3 digits of your ID</p>
+
+        <div class="otp-container">
+            <input type="text" maxlength="1" class="otp-input" id="otp1" inputmode="numeric" autofocus>
+            <input type="text" maxlength="1" class="otp-input" id="otp2" inputmode="numeric">
+            <input type="text" maxlength="1" class="otp-input" id="otp3" inputmode="numeric">
+        </div>
+
+        <div id="resultBox" class="result-container">
+            <h3>Your Assigned Topic</h3>
+            <div class="topic-number">Topic #<span id="topicNum"></span></div>
+            <div class="topic-name" id="topicText"></div>
+        </div>
+    </div>
+
+    <script>
+        const topics = [
+            "Types of graphs",
+            "Handshaking Theorem",
+            "Bipartite graph",
+            "Representing graphs",
+            "Isomorphism",
+            "Euler circuit and path",
+            "Hamilton circuit and path",
+            "Shortest path (Dijkstra)",
+            "Tree and its basic terminologies",
+            "Minimum spanning tree (Prim's algorithm)",
+            "Minimum spanning tree (Krushkal's algorithm)",
+            "Mathematical Induction"
+        ];
+
+        const inputs = document.querySelectorAll('.otp-input');
+        const resultBox = document.getElementById('resultBox');
+
+        // Logic to handle OTP-style input
+        inputs.forEach((input, index) => {
+            // Handle standard typing
+            input.addEventListener('input', (e) => {
+                // Force numeric only
+                e.target.value = e.target.value.replace(/[^0-9]/g, '');
+
+                if (e.target.value !== '') {
+                    // Move to next input if available
+                    if (index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+                }
+                
+                checkAndCalculate();
+            });
+
+            // Handle backspace navigation
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace') {
+                    if (e.target.value === '' && index > 0) {
+                        // If current box is empty and backspace is pressed, move to previous box and clear it
+                        inputs[index - 1].focus();
+                        inputs[index - 1].value = '';
+                        checkAndCalculate();
+                    } else if (e.target.value !== '') {
+                        // If current box has a value, let it clear the value but also trigger a calculation check
+                        setTimeout(checkAndCalculate, 10);
+                    }
+                }
+            });
+        });
+
+        // Handle Paste (allows user to paste a 3 digit number directly)
+        inputs[0].addEventListener('paste', (e) => {
+            e.preventDefault();
+            const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 3);
+            
+            for (let i = 0; i < pastedData.length; i++) {
+                inputs[i].value = pastedData[i];
+            }
+            
+            if (pastedData.length > 0) {
+                // Focus on the next empty box or the last box
+                const focusIndex = Math.min(pastedData.length, 2);
+                inputs[focusIndex].focus();
+            }
+            
+            checkAndCalculate();
+        });
+
+        function checkAndCalculate() {
+            const val1 = inputs[0].value;
+            const val2 = inputs[1].value;
+            const val3 = inputs[2].value;
+
+            // Check if all 3 boxes are filled
+            if (val1 !== '' && val2 !== '' && val3 !== '') {
+                const idString = val1 + val2 + val3;
+                const idNumber = parseInt(idString, 10);
+
+                // Apply the formula: ((last 3 digit % 12) + 1)
+                const topicIndex = (idNumber % 12); // Yields 0-11
+                const topicNumber = topicIndex + 1; // Yields 1-12
+
+                // Update UI
+                document.getElementById('topicNum').innerText = topicNumber;
+                document.getElementById('topicText').innerText = topics[topicIndex];
+                
+                // Show result
+                resultBox.style.display = 'block';
+                
+                // Optional: blur the last input so the mobile keyboard drops down automatically
+                inputs[2].blur(); 
+            } else {
+                // Hide result if incomplete
+                resultBox.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
