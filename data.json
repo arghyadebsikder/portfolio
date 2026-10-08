@@ -161,17 +161,22 @@
     {
       "icon": "code",
       "title": "Languages & Problem Solving",
-      "tags": ["C / C++", "Python", "Data Structures & Algorithms", "Mathematics", "Contest Strategy"]
+      "tags": ["C / C++", "JAVA", "Python", "Data Structures & Algorithms", "Mathematics", "Contest Strategy"]
     },
     {
       "icon": "cpu",
       "title": "Embedded & Robotics",
-      "tags": ["Arduino", "ESP32", "Raspberry Pi", "STM32", "PID Control", "Circuit Design", "Sensor Integration"]
+      "tags": ["Arduino", "ESP32", "Raspberry Pi", "Circuit Design", "Sensor Integration"]
     },
     {
       "icon": "film",
       "title": "Media & Tools",
-      "tags": ["Video Editing (Premiere Pro)", "Color Grading", "Sound Design", "Git & GitHub", "Linux"]
+      "tags": ["Video Editing (Davinci Resolve Studio)", "Photo Editing (Canva)"]
+    },
+    {
+      "icon": "Others",
+      "title": "Miscellaneous",
+      "tags": ["Leadership", "Teamwork", "Public Speaking", "Recitation"]
     }
   ],
   "profiles": {
@@ -225,6 +230,7 @@
         "date": "20XX — present"
       }
     ],
+    "videoResumeUrl": "https://youtu.be/Ehj430Phkn0",
     "skillsSummary": ["C / C++", "Python", "DSA", "Mathematics", "Arduino", "ESP32", "Raspberry Pi", "Premiere Pro", "Git"],
     "languages": [
       { "name": "Bangla", "level": "native" },
