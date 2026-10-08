@@ -55,6 +55,11 @@ const svg = (name) => I[name] || I.star;
 /* ---------------- Extra icons ---------------- */
 I.telegram = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm4.9 6.6-1.7 8.1c-.13.57-.47.71-.95.44l-2.6-1.92-1.25 1.21c-.14.14-.26.26-.53.26l.18-2.66 4.86-4.39c.21-.19-.05-.29-.33-.11l-6 3.78-2.59-.81c-.56-.18-.57-.56.12-.83l10.1-3.9c.47-.17.88.12.69.83Z"/></svg>';
 I.play = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5-11-6.5Z"/></svg>';
+I.pauseIco = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5.5h5v13H7zM12 5.5h5v13h-5z"/></svg>';
+I.vol = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6.5 9H3v6h3.5L11 19V5Z"/><path d="M14.5 9a4.5 4.5 0 0 1 0 6M16.8 7a7 7 0 0 1 0 10"/></svg>';
+I.mute = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6.5 9H3v6h3.5L11 19V5Z"/><path d="M16 9l4 6M20 9l-4 6"/></svg>';
+I.fs = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/></svg>';
+I.fsExit = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M8 8H3v5M16 8h5v5M8 16H3v-5M16 16h5v-5"/></svg>';
 
 /* ---------------- Fallback data (mirrors data.json for file:// viewing) ---------------- */
 const FALLBACK_DATA = {
@@ -284,6 +289,7 @@ const FALLBACK_DATA = {
         "date": "20XX — present"
       }
     ],
+    "videoResumeUrl": "",
     "skillsSummary": ["C / C++", "Python", "DSA", "Mathematics", "Arduino", "ESP32", "Raspberry Pi", "Premiere Pro", "Git"],
     "languages": [
       { "name": "Bangla", "level": "native" },
@@ -348,7 +354,9 @@ const Modal = {
     this.body = $("#modalBody");
     $("#modalClose").addEventListener("click", () => this.close());
     this.overlay.addEventListener("click", (e) => { if (e.target === this.overlay) this.close(); });
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape") this.close(); });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !VideoResume.blockEscape()) this.close();
+    });
     /* switch between certificate / prize photo / video inside the popup */
     this.body.addEventListener("click", (e) => {
       const btn = e.target.closest(".media-btn");
@@ -369,6 +377,7 @@ const Modal = {
   },
   close() {
     if (!this.overlay || !this.overlay.classList.contains("open")) return;
+    VideoResume.destroy();
     this.overlay.classList.remove("open");
     this.body.innerHTML = "";
     document.body.style.overflow = "";
@@ -399,6 +408,375 @@ function galleryHTML(m, title) {
     ? `<img src="${esc(m.imgs[0])}" alt="${esc(title)}">`
     : videoStage(m.vid, title);
   return `<div class="modal-media">${btns.length > 1 ? `<div class="media-switch">${btns.join("")}</div>` : ""}<div class="media-stage" id="mediaStage">${stage}</div></div>`;
+}
+
+/* ---------------- Video resume (chromeless YouTube player) ---------------- */
+/* Paste your unlisted YouTube link in data.json -> resume.videoResumeUrl
+   (or set VIDEO_RESUME_URL below when data.json is unavailable, e.g. file://).
+   Remember: YouTube Studio -> Video -> Details -> Allow embedding = ON. */
+let VIDEO_RESUME_URL = "";
+
+const VideoResume = {
+  btns: [], url: "", id: "", player: null,
+  apiPromise: null, timer: null, scrubbing: false, wrap: null,
+  idleTimer: null, hoverCtl: false, ready: false, wantPlay: false, touchReveal: false, session: 0,
+  IDLE_MS: 3000, /* controls hide after 3 seconds of inactivity while playing */
+
+  init() {
+    this.btns = $$("[data-video-resume]");
+    if (this.url === "") this.url = VIDEO_RESUME_URL;
+    if (!this.id) this.id = ytId(this.url);
+    this.btns.forEach((b) => b.addEventListener("click", () => this.open()));
+    /* warm up the YouTube API as soon as the visitor shows intent, so playback starts without a wait */
+    const warm = () => { if (this.id) this.loadApi().catch(() => {}); };
+    this.btns.forEach((b) => ["pointerenter", "focus", "touchstart"].forEach((ev) => b.addEventListener(ev, warm, { once: true, passive: true })));
+    this.syncBtns();
+    /* keep the fullscreen icon right when fullscreen is left with Esc / system gesture */
+    const onFs = () => {
+      const fs = $("#vrFs");
+      if (!fs || !this.wrap) return;
+      const on = !!(document.fullscreenElement || document.webkitFullscreenElement) || this.isFaux();
+      this.setBtn(fs, on ? "fsExit" : "fs", on ? "Exit fullscreen" : "Enter fullscreen");
+      if (!on) { try { if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); } catch (_) { /* noop */ } }
+      this.showControls();
+    };
+    document.addEventListener("fullscreenchange", onFs);
+    document.addEventListener("webkitfullscreenchange", onFs);
+  },
+
+  syncBtns() {
+    const hint = "Add your YouTube link in data.json \u2192 resume.videoResumeUrl";
+    this.btns.forEach((b) => {
+      b.disabled = !this.id;
+      if (this.id) b.removeAttribute("title"); else b.title = hint;
+    });
+  },
+
+  setUrl(u) {
+    this.url = String(u || "").trim();
+    if (this.url === "") this.url = VIDEO_RESUME_URL; /* data.json empty -> fall back to the constant */
+    this.id = ytId(this.url);
+    this.syncBtns();
+  },
+
+  /* ---------- YouTube IFrame API (lazy, loaded once) ---------- */
+  loadApi() {
+    if (window.YT && window.YT.Player) return Promise.resolve(window.YT);
+    if (this.apiPromise) return this.apiPromise;
+    this.apiPromise = new Promise((resolve, reject) => {
+      const prev = window.onYouTubeIframeAPIReady;
+      window.onYouTubeIframeAPIReady = () => {
+        if (typeof prev === "function") prev();
+        resolve(window.YT);
+      };
+      const s = document.createElement("script");
+      s.src = "https://www.youtube.com/iframe_api";
+      s.async = true;
+      s.onerror = () => reject(new Error("YouTube API failed to load"));
+      document.head.appendChild(s);
+      setTimeout(() => reject(new Error("YouTube API timeout")), 12000);
+    });
+    this.apiPromise.catch(() => { this.apiPromise = null; }); /* allow a retry after a failure */
+    return this.apiPromise;
+  },
+
+  /* ---------- Open the player ---------- */
+  async open() {
+    const id = ytId(this.url);
+    if (!id) { this.openMissing(); return; }
+    this.id = id;
+    const thumb = `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`;
+    Modal.open(`
+      <div class="vr-wrap" id="vrWrap" tabindex="-1">
+        <div class="vr-stage" id="vrStage">
+          <div class="vr-poster" id="vrPoster" role="button" tabindex="0" aria-label="Play video resume">
+            <img id="vrThumb" alt="">
+            <span class="vr-play-lg">${svg("play")}</span>
+          </div>
+          <div id="vrHost"></div>
+          <div class="vr-shield" id="vrShield" aria-hidden="true"></div>
+        </div>
+        <div class="vr-controls">
+          <button class="vr-btn" id="vrPlay" aria-label="Play"></button>
+          <span class="vr-time" id="vrTime">0:00 / 0:00</span>
+          <input class="vr-range vr-progress" id="vrSeek" type="range" min="0" max="100" step="0.1" value="0" aria-label="Seek">
+          <button class="vr-btn" id="vrMute" aria-label="Mute"></button>
+          <input class="vr-range vr-volume" id="vrVol" type="range" min="0" max="100" step="1" value="100" aria-label="Volume">
+          <button class="vr-btn" id="vrFs" aria-label="Enter fullscreen"></button>
+        </div>
+      </div>
+    `, "Video resume");
+    this.session++; this.ready = false; this.wantPlay = false;
+    this.wire(id, thumb);
+    this.mount(); /* load the player behind the poster so the click can start playback instantly */
+    this.begin();    /* autoplay: hide poster, play as soon as the player is ready */
+    this.toggleFs(); /* fullscreen right away (must run inside the click gesture) */
+  },
+
+  openMissing() {
+    Modal.open(`
+      <div class="modal-kicker">// Video resume</div>
+      <h3 class="modal-title">Video resume</h3>
+      <p class="modal-desc">No YouTube link yet. Add your unlisted video link to
+        <code>data.json</code> \u2192 <code>resume.videoResumeUrl</code> (or set
+        <code>VIDEO_RESUME_URL</code> in <code>assets/js/app.js</code>), and make sure
+        \u201cAllow embedding\u201d is enabled for that video in YouTube Studio.</p>
+    `, "Video resume");
+  },
+
+  wire(id, thumb) {
+    $("#modalCard").classList.add("modal-video");
+    this.wrap = $("#vrWrap");
+    const img = $("#vrThumb");
+    img.src = thumb;
+    img.addEventListener("error", () => { img.src = `https://i.ytimg.com/vi/${id}/hqdefault.jpg`; }, { once: true });
+    this.setBtn($("#vrPlay"), "play", "Play");
+    this.setBtn($("#vrMute"), "vol", "Mute");
+    this.setBtn($("#vrFs"), "fs", "Enter fullscreen");
+    $("#vrSeek").style.setProperty("--vr-pct", "0%");
+    $("#vrVol").style.setProperty("--vr-pct", "100%");
+
+    const start = () => this.begin();
+    $("#vrPoster").addEventListener("click", start);
+    $("#vrPoster").addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); start(); }
+    });
+    const shield = $("#vrShield");
+    shield.addEventListener("pointerdown", (e) => { this.touchReveal = e.pointerType === "touch" && this.wrap.classList.contains("vr-idle"); });
+    shield.addEventListener("click", () => {
+      if (this.touchReveal) { this.touchReveal = false; return; } /* first tap on touch only reveals the controls */
+      this.toggle(); this.wrap.focus();
+    });
+    shield.addEventListener("dblclick", () => this.toggleFs());
+    $("#vrPlay").addEventListener("click", () => this.toggle());
+    $("#vrMute").addEventListener("click", () => this.toggleMute());
+    $("#vrFs").addEventListener("click", () => this.toggleFs());
+    $("#vrSeek").addEventListener("input", (e) => {
+      this.scrubbing = true;
+      const pct = +e.target.value;
+      e.target.style.setProperty("--vr-pct", pct + "%");
+      if (this.player) $("#vrTime").textContent = `${fmtTime((pct / 100) * this.duration())} / ${fmtTime(this.duration())}`;
+    });
+    $("#vrSeek").addEventListener("change", (e) => {
+      this.scrubbing = false;
+      this.showControls();
+      if (this.player) this.player.seekTo((+e.target.value / 100) * this.duration(), true);
+    });
+    $("#vrVol").addEventListener("input", (e) => {
+      e.target.style.setProperty("--vr-pct", e.target.value + "%");
+      if (!this.player) return;
+      this.player.setVolume(+e.target.value);
+      if (+e.target.value > 0 && this.player.isMuted()) this.player.unMute();
+      this.syncVolume();
+    });
+
+    this.wrap.addEventListener("keydown", (e) => {
+      if (e.key === " " || e.key === "k") { e.preventDefault(); this.toggle(); }
+      else if (e.key === "ArrowLeft") { e.preventDefault(); this.nudge(-5); }
+      else if (e.key === "ArrowRight") { e.preventDefault(); this.nudge(5); }
+      else if (e.key === "m" || e.key === "M") { e.preventDefault(); this.toggleMute(); }
+      else if (e.key === "f" || e.key === "F") { e.preventDefault(); this.toggleFs(); }
+    });
+    /* auto-hide controls: any activity shows them, 3 s of calm while playing hides them */
+    const ctl = $(".vr-controls", this.wrap);
+    const wake = () => this.showControls();
+    ["pointermove", "pointerdown", "touchstart", "keydown"].forEach((ev) => this.wrap.addEventListener(ev, wake, { passive: true }));
+    ctl.addEventListener("pointerenter", () => { this.hoverCtl = true; this.showControls(); });
+    ctl.addEventListener("pointerleave", () => { this.hoverCtl = false; this.showControls(); });
+    ctl.addEventListener("focusin", wake);
+    this.hoverCtl = false;
+    this.showControls();
+    $("#vrPoster").focus();
+  },
+
+  /* ---------- Player lifecycle ---------- */
+  async mount() {
+    const id = this.id;
+    const s = this.session;
+    try {
+      const YT = await this.loadApi();
+      if (s !== this.session || this.player || !$("#vrHost")) return; /* closed while loading */
+      this.player = new YT.Player($("#vrHost"), {
+        videoId: id,
+        playerVars: {
+          controls: 0, modestbranding: 1, rel: 0, showinfo: 0, fs: 0, disablekb: 1,
+          iv_load_policy: 3, playsinline: 1, autoplay: 0, cc_load_policy: 0,
+          ...(/^https?:$/.test(location.protocol) ? { origin: location.origin } : {}),
+        },
+        events: {
+          onReady: () => {
+            this.ready = true;
+            this.player.setVolume(+$("#vrVol").value);
+            this.startLoop();
+            if (this.wantPlay) { this.player.playVideo(); if (this.wrap) this.wrap.focus(); }
+          },
+          onStateChange: (e) => {
+            const playing = e.data === YT.PlayerState.PLAYING;
+            this.setBtn($("#vrPlay"), playing ? "pauseIco" : "play", playing ? "Pause" : "Play");
+            this.showControls();
+            if (e.data === YT.PlayerState.ENDED) {
+              this.player.seekTo(0, true);
+              this.player.pauseVideo(); /* no YouTube end-screen / suggestions */
+              $("#vrSeek").value = 0;
+              $("#vrSeek").style.setProperty("--vr-pct", "0%");
+            }
+          },
+          onAutoplayBlocked: () => {
+            this.wantPlay = false;
+            const p = $("#vrPoster"); if (p) p.classList.remove("hide");
+            const sh = $("#vrShield"); if (sh) sh.classList.remove("on");
+          },
+          onError: () => this.failEmbed(),
+        },
+      });
+    } catch (_) { this.failEmbed(); }
+  },
+
+  failEmbed() {
+    const host = $("#vrHost");
+    if (!host) return;
+    host.innerHTML = `<div class="vr-error">
+      <p>The video could not be loaded here. It may block embedding, or the network is unavailable.</p>
+      <a class="btn btn-ghost btn-sm" href="${esc(this.url)}" target="_blank" rel="noopener">${svg("youtube")} Watch on YouTube</a>
+    </div>`;
+  },
+
+  destroy() {
+    if (this.timer) { clearInterval(this.timer); this.timer = null; }
+    if (this.player && this.player.destroy) { try { this.player.destroy(); } catch (_) { /* noop */ } }
+    if (this.idleTimer) { clearTimeout(this.idleTimer); this.idleTimer = null; }
+    this.session++; this.ready = false; this.wantPlay = false; this.hoverCtl = false;
+    try { if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); } catch (_) { /* noop */ }
+    this.player = null;
+    this.wrap = null;
+    this.scrubbing = false;
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+    const card = $("#modalCard");
+    if (card) card.classList.remove("modal-video");
+    const faux = $(".vr-faux-full");
+    if (faux) faux.classList.remove("vr-faux-full");
+    if (card) card.classList.remove("vr-faux-host");
+    document.body.style.overflow = "";
+  },
+
+  /* ---------- Controls ---------- */
+  startLoop() {
+    if (this.timer) clearInterval(this.timer);
+    this.timer = setInterval(() => {
+      if (!this.player || !this.player.getCurrentTime) return;
+      const d = this.duration();
+      const c = this.player.getCurrentTime();
+      const seek = $("#vrSeek");
+      if (seek && d > 0 && !this.scrubbing) {
+        const pct = (c / d) * 100;
+        seek.value = pct;
+        seek.style.setProperty("--vr-pct", pct + "%");
+      }
+      const t = $("#vrTime");
+      if (t) t.textContent = `${fmtTime(c)} / ${fmtTime(d)}`;
+    }, 250);
+  },
+  /* poster click: hide the poster and start playing right away (the player is already loaded) */
+  begin() {
+    const poster = $("#vrPoster"); if (poster) poster.classList.add("hide");
+    const shield = $("#vrShield"); if (shield) shield.classList.add("on");
+    this.wantPlay = true;
+    if (this.player && this.ready) this.player.playVideo();
+    else if (!this.player) this.mount(); /* fallback if the early load did not run */
+    this.showControls();
+    if (this.wrap) this.wrap.focus();
+  },
+  isPlaying() {
+    if (!this.player || !this.player.getPlayerState || !window.YT) return false;
+    const st = this.player.getPlayerState();
+    return st === window.YT.PlayerState.PLAYING || st === window.YT.PlayerState.BUFFERING;
+  },
+  showControls() {
+    if (!this.wrap) return;
+    this.wrap.classList.remove("vr-idle");
+    if (this.idleTimer) { clearTimeout(this.idleTimer); this.idleTimer = null; }
+    if (this.isPlaying()) this.idleTimer = setTimeout(() => this.hideControls(), this.IDLE_MS);
+  },
+  hideControls() {
+    this.idleTimer = null;
+    if (!this.wrap || !this.isPlaying() || this.hoverCtl || this.scrubbing) return;
+    const ctl = $(".vr-controls", this.wrap);
+    try { if (ctl && ctl.querySelector(":focus-visible")) return; } catch (_) { /* noop */ } /* keyboard user is on a control */
+    this.wrap.classList.add("vr-idle");
+  },
+  duration() { return this.player && this.player.getDuration ? (this.player.getDuration() || 0) : 0; },
+  setBtn(el, name, label) { if (el) { el.innerHTML = svg(name); el.setAttribute("aria-label", label); } },
+
+  toggle() {
+    if (!this.player) return;
+    this.player.getPlayerState() === window.YT.PlayerState.PLAYING ? this.player.pauseVideo() : this.player.playVideo();
+  },
+  nudge(delta) {
+    if (!this.player) return;
+    const d = this.duration();
+    this.player.seekTo(Math.min(Math.max(this.player.getCurrentTime() + delta, 0), d || Infinity), true);
+  },
+  toggleMute() {
+    if (!this.player) return;
+    if (this.player.isMuted()) { this.player.unMute(); if (this.player.getVolume() === 0) this.player.setVolume(70); }
+    else this.player.mute();
+    this.syncVolume();
+  },
+  syncVolume() {
+    if (!this.player) return;
+    const muted = this.player.isMuted();
+    const vol = muted ? 0 : this.player.getVolume();
+    this.setBtn($("#vrMute"), vol === 0 ? "mute" : "vol", muted ? "Unmute" : "Mute");
+    const muteBtn = $("#vrMute");
+    if (muteBtn) muteBtn.classList.toggle("is-active", muted);
+    const slider = $("#vrVol");
+    if (slider) { slider.value = vol; slider.style.setProperty("--vr-pct", vol + "%"); }
+  },
+
+  isFaux() { const w = this.wrap || $(".vr-wrap"); return !!(w && w.classList.contains("vr-faux-full")); },
+  /* Modal's Escape handler checks this so faux fullscreen exits before the popup */
+  blockEscape() { return this.isFaux(); },
+
+  setFaux(el, on) {
+    el.classList.toggle("vr-faux-full", on);
+    const card = $("#modalCard");
+    if (card) card.classList.toggle("vr-faux-host", on);
+  },
+
+  async toggleFs() {
+    const el = this.wrap || $(".vr-wrap");
+    if (!el) return;
+    const btn = $("#vrFs");
+    if (this.isFaux()) { this.setFaux(el, false); this.setBtn(btn, "fs", "Enter fullscreen"); }
+    else if (document.fullscreenElement) {
+      await document.exitFullscreen().catch(() => {});
+      this.setBtn(btn, "fs", "Enter fullscreen");
+    } else {
+      const req = el.requestFullscreen || el.webkitRequestFullscreen;
+      if (!req) { this.setFaux(el, true); this.setBtn(btn, "fsExit", "Exit fullscreen"); }
+      else {
+        try {
+          await req.call(el, { navigationUI: "hide" });
+          this.setBtn(btn, "fsExit", "Exit fullscreen");
+          try { if (screen.orientation && screen.orientation.lock) screen.orientation.lock("landscape").catch(() => {}); } catch (_) { /* noop */ }
+        } catch (_) {
+          this.setFaux(el, true);
+          this.setBtn(btn, "fsExit", "Exit fullscreen");
+        }
+      }
+    }
+  },
+};
+
+function ytId(url) {
+  const m = String(url || "").match(/(?:youtu\.be\/|v=|shorts\/|embed\/)([\w-]{11})/);
+  return m ? m[1] : "";
+}
+function fmtTime(s) {
+  const t = Math.max(0, Math.floor(Number(s) || 0));
+  const h = Math.floor(t / 3600), m = Math.floor((t % 3600) / 60), sec = t % 60;
+  const pad = (n) => String(n).padStart(2, "0");
+  return h ? `${h}:${pad(m)}:${pad(sec)}` : `${m}:${pad(sec)}`;
 }
 
 /* ---------------- Data engine ---------------- */
@@ -721,6 +1099,7 @@ function renderResume(r) {
   $("#expList").innerHTML = (r.experience || []).map(item).join("");
   $("#skillChips").innerHTML = (r.skillsSummary || []).map((t) => `<span class="chip">${esc(t)}</span>`).join("");
   $("#langRows").innerHTML = (r.languages || []).map((l) => `<div class="lang-row"><b>${esc(l.name)}</b><span>${esc(l.level)}</span></div>`).join("");
+  if (r.videoResumeUrl !== undefined) VideoResume.setUrl(r.videoResumeUrl);
 }
 
 /* ---------------- Reveal on scroll ---------------- */
@@ -912,6 +1291,7 @@ document.addEventListener("DOMContentLoaded", () => {
   Reveal.init();
   typewriter();
   Modal.init();
+  VideoResume.init();
   loadData();
   timeline();
   scrollFx();
