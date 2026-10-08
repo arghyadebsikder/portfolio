@@ -55,6 +55,8 @@
   </script>
 
   <link rel="stylesheet" href="./assets/css/styles.css">
+  <link rel="preconnect" href="https://www.youtube.com">
+  <link rel="preconnect" href="https://i.ytimg.com">
 </head>
 
 <body>
@@ -145,6 +147,8 @@ GPIO.setup(18, GPIO.OUT)</pre>
           <a class="btn btn-primary" href="#projects">View Projects <span data-icon="arrowUpRight"></span></a>
           <a class="btn btn-ghost" href="./assets/resume.pdf" download>Download Resume <span
               data-icon="download"></span></a>
+          <button class="btn btn-ghost" type="button" data-video-resume>Video Resume <span
+              data-icon="play"></span></button>
           <a class="btn btn-ghost" href="#contact">Contact Me <span data-icon="send"></span></a>
         </div>
         <div class="hero-social">
@@ -409,12 +413,15 @@ GPIO.setup(18, GPIO.OUT)</pre>
           </div>
           <div class="resume-col">
             <div class="glass resume-cta reveal">
-              <p>Prefer a one-page summary? View it in the browser or take a copy with you.</p>
+              <p>Prefer a one-page summary? Watch the video resume, open it in the browser, or take a copy with you.
+              </p>
               <div class="btns">
                 <a class="btn btn-primary btn-sm" href="./assets/resume.pdf" target="_blank" rel="noopener"><span
                     data-icon="eye"></span> View Resume</a>
                 <a class="btn btn-ghost btn-sm" href="./assets/resume.pdf" download><span data-icon="download"></span>
                   Download</a>
+                <button class="btn btn-ghost btn-sm" type="button" id="videoResumeBtn" data-video-resume><span data-icon="play"></span>
+                  Video resume</button>
               </div>
             </div>
             <div class="glass resume-block reveal reveal-d1">
@@ -561,7 +568,7 @@ GPIO.setup(18, GPIO.OUT)</pre>
 
   <!-- ================= Detail popup ================= -->
   <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-label="Details">
-    <div class="glass modal">
+    <div class="glass modal" id="modalCard">
       <button class="icon-btn modal-close" id="modalClose" aria-label="Close details" data-icon="x"></button>
       <div id="modalBody"></div>
     </div>
